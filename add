@@ -1,0 +1,46 @@
+// CS 273 m02
+// Program Name: add.S Lab2
+// Author: Eduard Salugsugan
+// Date: 1/24/2019
+// Purpose: Adds and Substract inputs from the user and makes the arduino light up
+
+#
+# Global data (x1, x2, and x3)
+#
+    .data
+    .comm x1,1
+    .global x1
+    .comm x2,1
+    .global x2
+    .comm x3,1
+    .global x3
+
+#
+# Program code (addition function)
+#
+    .text
+    .global addition
+addition:
+    lds  r18, x1 // first number inputted by the user
+    lds  r19, x2 // second number inputted by the user
+    lds  r20, x3 // third number inputted by the user
+
+    inc  r18  // x1 + 1
+    add  r18, r18  // (x1 + 1) * 2
+    dec  r19  // x2 -1
+    dec  r20
+    dec  r20 
+    dec  r20  // x3 -3
+    
+    add  r18, r19  
+    add  r18, r20  // x1 + x2 + x3
+    sts  x3, r18 // outputs the answer
+
+    ret
+
+    ldi R18, 0b00100000
+    out 0x04, R18 // makes the arduino light up 
+    
+    ldi R18, 0b00100000
+    out 0x05, R18 // makes the arduino light up 
+    
