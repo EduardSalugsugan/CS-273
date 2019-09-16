@@ -1,0 +1,138 @@
+// Author: Eduard Salugsugan
+// Lab: M02
+// Date: 02/07/2019
+// Purpose: Executes certain commands to determine if your body fat is low/normal/high/very high.   
+#
+# Global data (gender, age, fat)
+#     
+   .data
+    .comm gender,1
+    .global gender
+    .comm age,1
+    .global age
+    .comm fat,1
+    .global fat
+
+#
+# Program code (lightup)
+#     
+     .text
+     .global lightup
+lightup:
+       ldi  r18, 0b00110001
+       out  0x04, r18   ; 0x04 is I/O address of DDRB
+
+  
+  lds r18, gender // stores the value gender
+  lds r19, age    // stores the value of age
+  lds r20, fat    // stores the value of fat
+  
+  cpi r18, 1      // if the user inputs 1 the program jumps to female 
+  breq female
+
+  cpi r18, 2      // if the user inputs 2 the program jumps to male
+  breq male
+
+female:           
+
+  cpi r19, 40     // compares the age and if its less than 40 the program will jump to f20
+  BRLO  f20
+  cpi r19, 60     // compares the age and if its less than 60 the program will jump to f40
+  BRLO  f40
+  rjmp f60        // if non of the statement are true the program will imidiately jump to f60
+
+male: 
+    
+  cpi r19, 40     // compares the age and if its less than 40 the program will jump to m20
+  BRLO  m20
+  cpi r19, 60     // compares the age and if its less than 60 the program will jump to m40
+  BRLO  m40
+  rjmp m60        // if non of the statements are true the program will imidiately jump to m60
+        
+f20:              // executes when female age is below 40
+
+  cpi r20, 20     // compares the fat and if its less than 20 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 32     // compares the fat and if its less than 32 the program will jump to blueon which means normal body fat
+  BRLO  greenon
+  cpi r20, 39     // compares the fat and if its less than 39 the program will jump to blueon which means high body fat
+  BRLO  redon
+  rjmp  allon     // if non of the statements are true the program will imidiately jump to allon which means very high body fat
+            
+f40:              // executes when female age is below 60
+
+  cpi r20, 22     // compares the fat and if its less than 22 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 33     // compares the fat and if its less than 33 the program will jump to blueon which means normal body fat
+  BRLO  greenon
+  cpi r20, 40     // compares the fat and if its less than 40 the program will jump to blueon which means high body fat
+  BRLO  redon
+  rjmp  allon     //if non of the statements are true the program will imidiately jump to allon which means very high body fat
+
+f60:              // executes when female age is above 60
+
+  cpi r20, 23     // compares the fat and if its less than 23 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 35     // compares the fat and if its less than 35 the program will jump to blueon which means low body fat
+  BRLO  greenon
+  cpi r20, 41     // compares the fat and if its less than 41 the program will jump to blueon which means low body fat
+  BRLO  redon
+  rjmp  allon     // if non of the statements are true the program will imidiately jump to allon which means very high body fat
+
+m20:              // executes when male age is below 40
+
+  cpi r20, 8      // compares the fat and if its less than 8 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 19     // compares the fat and if its less than 19 the program will jump to blueon which means low body fat
+  BRLO  greenon
+  cpi r20, 24     // compares the fat and if its less than 24 the program will jump to blueon which means low body fat
+  BRLO  redon
+  rjmp  allon     // if non of the statements are true the program will imidiately jump to allon which means very high body fat
+
+m40:              // executes when male age is below 60
+  
+  cpi r20, 10     // compares the fat and if its less than 10 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 21     // compares the fat and if its less than 21 the program will jump to blueon which means low body fat
+  BRLO  greenon
+  cpi r20, 27     // compares the fat and if its less than 27 the program will jump to blueon which means low body fat
+  BRLO  redon
+  rjmp  allon     // if non of the statements are true the program will imidiately jump to allon which means very high body fat
+
+m60:              // executes when male age is above 60
+    
+  cpi r20, 12     // compares the fat and if its less than 12 the program will jump to blueon which means low body fat
+  BRLO  blueon
+  cpi r20, 24     // compares the fat and if its less than 24 the program will jump to blueon which means low body fat
+  BRLO  greenon
+  cpi r20, 29     // compares the fat and if its less than 29 the program will jump to blueon which means low body fat
+  BRLO  redon
+  rjmp  allon     // if non of the statements are true the program will imidiately jump to allon which means very high body fat
+
+greenon:          // program to get the green light on           
+  ldi r18, 0b00010000
+  out 0x04, r18
+  out 0x05, r18
+  jmp finish
+
+blueon:           // program to get the blue light on
+  ldi r18, 0b00100000
+  out 0x04, r18
+  out 0x05, r18
+  jmp finish
+
+redon:            // program to get the red light on
+  ldi r18, 0b00000001
+  out 0x04, r18
+  out 0x05, r18
+  jmp finish
+
+allon:            // program to get all lights on
+  ldi r18, 0b00110001
+  out 0x04, r18
+  out 0x05, r18
+  jmp finish
+ 
+
+finish:           // an easy return program to call on
+  ret
